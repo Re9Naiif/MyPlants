@@ -17,7 +17,28 @@ static let greenStart    = Color(red: 0.19, green: 0.80, blue: 0.55)
 static let greenEnd      = Color(red: 0.09, green: 0.65, blue: 0.43)
 }
 
-// MARK: - Root
+struct GlossyCapsule: ViewModifier {
+func body(content: Content) -> some View {
+content
+.overlay(
+LinearGradient(
+colors: [Color.white.opacity(0.25), Color.white.opacity(0.06), .clear],
+startPoint: .top, endPoint: .center
+                )
+.blendMode(.screen)
+.clipShape(Capsule())
+            )
+.overlay(
+Capsule().stroke(Color.white.opacity(0.12), lineWidth: 0.8)
+            )
+.shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
+    }
+}
+extension View {
+
+func glossyCapsule() -> some View { modifier(GlossyCapsule()) }
+}
+
 struct ContentView: View {
 var body: some View {
 MyPlantsIntroView()
@@ -25,14 +46,12 @@ MyPlantsIntroView()
     }
 }
 
-// MARK: - Screen
 struct MyPlantsIntroView: View {
 var body: some View {
 ZStack {
-Color.appBackground.ignoresSafeArea()
+    Color.appBackground.ignoresSafeArea()
 
 VStack(alignment: .leading, spacing: 0) {
-
 Spacer().frame(height: 8)
 
 Text("My Plants 🌱")
@@ -48,8 +67,8 @@ Rectangle()
 .padding(.horizontal, 24)
 
 ScrollView {
+                    
 VStack(spacing: 16) {
-                       
 Image("زرعه")
 .resizable()
 .scaledToFit()
@@ -57,14 +76,12 @@ Image("زرعه")
 .accessibilityLabel("Cute plant in a pot")
 .padding(.top, 24)
 
-                        
 Text("Start your plant journey!")
 .font(.system(size: 22, weight: .semibold))
 .foregroundColor(.titleText)
 .multilineTextAlignment(.center)
 .padding(.top, 10)
 
-            
 Text("Now all your plants will be in one place and we will help you take care of them :) 🪴")
 .font(.system(size: 15))
 .foregroundColor(.bodyText)
@@ -72,17 +89,16 @@ Text("Now all your plants will be in one place and we will help you take care of
 .padding(.horizontal, 28)
 .lineSpacing(2)
 
-                    
 Spacer(minLength: 70)
 
 Button(action: {
-    
+                            
                         }) {
 Text("Set Plant Reminder")
 .font(.system(size: 17, weight: .semibold))
 .foregroundColor(.buttonText)
 .frame(maxWidth: .infinity)
-.padding(.vertical, 16)
+.padding(.vertical, 18)
 .contentShape(Rectangle())
                         }
 .background(
@@ -93,14 +109,14 @@ endPoint: .bottomTrailing
                             )
                         )
 .clipShape(Capsule())
-.shadow(radius: 6, x: 0, y: 3)
+.glossyCapsule()
 .padding(.horizontal, 24)
-.padding(.top, 8)
-.padding(.bottom, 60)
+.padding(.top, 12)
+.padding(.bottom, 100)
 .accessibilityLabel("Set plant reminder")
                     }
 .frame(maxWidth: .infinity)
-.padding(.top, 48)
+.padding(.top, 50)
                 }
             }
         }
@@ -110,10 +126,8 @@ endPoint: .bottomTrailing
 struct MyPlantsIntroView_Previews: PreviewProvider {
 static var previews: some View {
 Group {
-ContentView()
-.previewDisplayName("Default")
-MyPlantsIntroView()
-.previewDisplayName("MyPlants Screen")
+ContentView().previewDisplayName("Default")
+MyPlantsIntroView().previewDisplayName("MyPlants Screen")
         }
 .preferredColorScheme(.dark)
     }
